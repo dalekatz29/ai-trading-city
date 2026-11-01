@@ -1,4 +1,4 @@
-export const names=['מגדל התצפית','בית המגמה','בית הפריצות','בית הממוצע','הבנק העירוני','בורסת העיר'];
+export const names=['סורק השוק','סקאלפ מומנטום','סקאלפ פריצה','סקאלפ התאוששות','מנהל סיכונים','סוכן ביצוע'];
 export function bar(i,day=1){
  const wave=Math.sin(i*.32+day)*9+Math.sin(i*.87+day*3)*3+Math.cos(i*.11-day)*13;
  return {price:Math.round((20500+wave)*4)/4,volume:Math.round(110+45*Math.sin(i*.9+day)+Math.abs(wave)*2)};
@@ -26,14 +26,17 @@ export function next(s,approve=false){
  s.i++;const p=bar(s.i,s.day).price;
  if(s.cash+openPNL(s)<=-s.loss){halt(s);return;}
  if(t){
-  if(s.qty<t.total){
+  const move=p-s.avg;
+  if(s.qty>0&&(move>=4||move<=-3||s.i>=t.exit)){
+   const reason=move>=4?'יעד רווח':move<=-3?'עצירת הפסד':'מגבלת זמן 45 שניות';
+   const gain=(p-.25-s.avg)*2*s.qty-s.qty;s.cash+=gain;t.net+=gain;s.qty=0;s.avg=0;t.status='נסגרה';
+   event(s,reason+' • סגירה במחיר '+(p-.25)+' • ביטול יתרת כניסה • כולל עלויות');s.active=null;
+  }else if(s.qty<t.total){
    const fill=p+.25;
    if((s.qty+1)*fill*2>s.budget){halt(s);return;}
    s.avg=(s.avg*s.qty+fill)/(s.qty+1);s.qty++;s.cash-=1;t.net-=1;
    t.status=s.qty===t.total?'בוצעה':'ביצוע חלקי';event(s,t.status+' • חוזה אחד במחיר '+fill);
-   if(s.qty===t.total)t.exit=s.i+3;
-  }else if(s.i>=t.exit){
-   const gain=(p-.25-s.avg)*2*s.qty-s.qty;s.cash+=gain;t.net+=gain;s.qty=0;s.avg=0;t.status='נסגרה';event(s,'סגירה במחיר '+(p-.25)+' • כולל עמלה והחלקה');s.active=null;
+   if(s.qty===1)t.exit=s.i+3;
   }
  }else if(s.i<70){
   const flags=signals(s);const agent=s.focus?(flags[s.focus-1]?s.focus:0):flags.indexOf(true)+1;
