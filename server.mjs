@@ -1,7 +1,7 @@
 import http from 'node:http';
 import https from 'node:https';
 import {readFile} from 'node:fs/promises';
-const assets=new Map([['/','index.html'],...['style.css','app.mjs','engine.mjs','city.mjs'].map(p=>['/'+p,p])]);
+const assets=new Map([['/','index.html'],...['style.css','app.mjs','engine.mjs','city.mjs','office.mjs'].map(p=>['/'+p,p])]);
 function gateway(){
  return new Promise(resolve=>{
  const req=https.get('https://localhost:5000/v1/api/iserver/auth/status',{timeout:2500},res=>{
