@@ -1,7 +1,7 @@
 import http from 'node:http';
 import https from 'node:https';
 import {readFile} from 'node:fs/promises';
-const assets=new Map([['/','index.html'],...['style.css','app.mjs','engine.mjs'].map(p=>['/'+p,p])]);
+const assets=new Map([['/','index.html'],...['style.css','app.mjs','engine.mjs','city.mjs'].map(p=>['/'+p,p])]);
 function gateway(){
  return new Promise(resolve=>{
  const req=https.get('https://localhost:5000/v1/api/iserver/auth/status',{timeout:2500},res=>{
@@ -16,3 +16,4 @@ http.createServer(async(req,res)=>{
  const asset=assets.get(req.url);if(!asset){res.writeHead(404).end();return;}
  try{const data=await readFile(new URL(asset,import.meta.url));res.setHeader('Content-Type',(asset.endsWith('html')?'text/html':asset.endsWith('css')?'text/css':'text/javascript')+'; charset=utf-8');res.end(data);}catch{res.writeHead(500).end();}
 }).listen(4173,'127.0.0.1',()=>console.log('Trading City: http://127.0.0.1:4173'));
+
