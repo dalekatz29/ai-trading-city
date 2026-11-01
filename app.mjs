@@ -1,10 +1,10 @@
-import {cityScene} from './city.mjs';
+import {cityScene,bankBuilding} from './city.mjs';
+import {officeScene} from './office.mjs';
 import {names,create,next,bar,signals,openPNL,halt,review} from './engine.mjs';
 const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
 let s=create(),selected=0,timer;
 try{const saved=JSON.parse(localStorage.scalpingStateV1||'null');if(saved){s=saved;if(s.active)s.active=s.trades.at(-1);}}catch{}
 const time=i=>new Date(Date.UTC(2026,0,1,9,30,i*15)).toISOString().slice(11,19);
-const colors=['#9ce8cb','#f3c37d','#a6bfff','#d6a5db','#9ed8b1','#f4a789'];
 const roles = [
  'סורק את המחיר והנפח בכל 15 שניות ומעביר נתונים לחוקרים.',
  'בודק המשך תנועה קצרה על פני ארבעה צעדים, כלומר דקה.',
@@ -14,21 +14,27 @@ const roles = [
  'מדמה ביצוע חלקי, עמלות, החלקה ויציאה מהירה מהעסקה.'
 ];
 function map(){
- $('agents').innerHTML=names.map((name,a)=>'<button class="agent-card" data-a="'+a+'" aria-pressed="'+(selected===a)+'"><svg class="avatar" viewBox="0 0 40 45" aria-hidden="true"><rect width="40" height="45" rx="9" fill="'+colors[a]+'22"/><path d="M9 40v-10q11-12 22 0v10" fill="'+colors[a]+'"/><circle cx="20" cy="17" r="9" fill="#d9b08b"/><path d="M11 17v-5q9-12 18 0v5l-5-5-13 3" fill="#34424b"/><path d="M16 20h2m5 0h2" stroke="#34424b" stroke-width="2"/></svg><b>'+name+'</b><small>'+(a>0&&a<4?'חוקר אסטרטגיה':'תפעול ובקרה')+'</small></button>').join('');
+ $('officeRoom').innerHTML=officeScene($('agentDetails').hidden?-1:selected,s.active?.agent,Boolean(timer));
  $('role').textContent=roles[selected];
+ $('officeActivity').textContent=s.stopped?'● המשרד עצור':s.i>=77?'● התרגול הסתיים':timer?'● הסריקה פועלת':s.active?.status==='אישור'?'● ממתינים לאישור':'● ממתינים להפעלה';
+ $('bankSummary').innerHTML='<span>חשיפה נומינלית פתוחה</span><strong>'+fmt(s.qty*bar(s.i,s.day).price*2)+'</strong><span>מתוך תקרה של '+fmt(s.budget)+'</span><p>'+s.qty+' חוזים פתוחים · רווח ממומש '+fmt(s.cash)+'</p>';
 }
 function route(){
  const inside=location.hash==='#office';
- $('cityView').hidden=inside;
+ const bank=location.hash==='#bank';
+ $('cityView').hidden=inside||bank;
  $('officeView').hidden=!inside;
+ $('bankView').hidden=!bank;
  if(!inside)pause();
+ map();
  window.scrollTo(0,0);
 }
 $('city').innerHTML=cityScene();
-$('enterOffice').onclick=()=>{location.hash='office';};
-$('backCity').onclick=()=>{location.hash='city';};
+$('bankArt').innerHTML='<defs><linearGradient id="bankDome" x2="0" y2="1"><stop stop-color="#79eaf8" stop-opacity=".75"/><stop offset="1" stop-color="#172e4c"/></linearGradient><linearGradient id="bankGlass" x2="1" y2="1"><stop stop-color="#1d607c"/><stop offset="1" stop-color="#07192e"/></linearGradient></defs>'+bankBuilding(200,245).replaceAll('url(#dome)','url(#bankDome)').replaceAll('url(#cityGlass)','url(#bankGlass)');
+$('city').onclick=e=>{const destination=e.target.closest('[data-place]');if(destination)location.hash=destination.dataset.place;};
+$('city').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){const destination=e.target.closest('[data-place]');if(destination){e.preventDefault();location.hash=destination.dataset.place;}}};
 window.addEventListener('hashchange',route);
-function show(html){pause();$('dialogBody').innerHTML=html;$('dialog').showModal();}
+function show(html){pause();map();$('dialogBody').innerHTML=html;$('dialog').showModal();}
 function pause(){clearInterval(timer);timer=null;$('run').textContent='▶ הפעלה';}
 function paint(){
  const b=bar(s.i,s.day),prev=bar(s.i-1,s.day),flags=signals(s);
@@ -45,8 +51,10 @@ function paint(){
  map();localStorage.scalpingStateV1=JSON.stringify(s);
 }
 function tick(){next(s);if(s.mode==='manual'&&s.active?.status==='אישור')pause();paint();}
-$('agents').onclick=e=>{const g=e.target.closest('[data-a]');if(g){selected=+g.dataset.a;paint();$('agents').querySelector('[data-a="'+selected+'"]').focus();}};
-$('run').onclick=()=>{if(timer)return pause();timer=setInterval(tick,800);$('run').textContent='Ⅱ השהיה';tick();};$('step').onclick=tick;$('approve').onclick=()=>{next(s,true);paint();};$('stop').onclick=()=>{halt(s);paint();};
+$('officeRoom').onclick=e=>{const station=e.target.closest('[data-a]');if(station){selected=Number(station.dataset.a);$('agentDetails').hidden=false;$('roomLayout').classList.add('has-selection');paint();$('officeRoom').querySelector('[data-a="'+selected+'"]').focus();}};
+$('officeRoom').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}};
+$('closeAgent').onclick=()=>{$('agentDetails').hidden=true;$('roomLayout').classList.remove('has-selection');map();$('officeRoom').querySelector('[data-a="'+selected+'"]').focus();};
+$('run').onclick=()=>{if(timer){pause();paint();return;}timer=setInterval(tick,800);$('run').textContent='Ⅱ השהיה';tick();};$('step').onclick=tick;$('approve').onclick=()=>{next(s,true);paint();};$('stop').onclick=()=>{halt(s);paint();};
 $('log').onclick=e=>{if(!e.target.dataset.t)return;const t=s.trades[+e.target.dataset.t];show('<h2 id="dialogTitle">סיפור העסקה</h2><p>'+names[t.agent]+'</p>'+t.events.map(v=>'<p>'+time(v.i)+'　'+v.label+'</p>').join(''));};
 function settings(){for(const k of ['mode','budget','max','loss'])$(k).value=s[k];}
 $('save').onclick=()=>{const vals=['budget','max','loss'].map(k=>Number($(k).value));if(vals.some(v=>!Number.isFinite(v)||v<=0)||!Number.isInteger(vals[1])||vals[1]<s.qty||vals[0]<s.qty*bar(s.i,s.day).price*2)return $('msg').textContent='נדרשים ערכים חיוביים המכסים את הפוזיציה הקיימת ומספר חוזים שלם.';[s.budget,s.max,s.loss]=vals;s.mode=$('mode').value;$('msg').textContent='המגבלות נשמרו';paint();};
