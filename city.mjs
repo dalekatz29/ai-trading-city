@@ -1,53 +1,43 @@
 export function cityScene() {
- const point=(x,y,z=0)=>[500+(x-y)*.88,260+(x+y)*.44-z];
- const polygon=(points,fill,stroke='none')=>'<polygon points="'+points.map(p=>point(...p).join(',')).join(' ')+'" fill="'+fill+'" stroke="'+stroke+'"/>';
- function box(x,y,w,d,h,top,left,right,z=0) {
-  return polygon([[x,y,z],[x,y+d,z],[x,y+d,z+h],[x,y,z+h]],left)+polygon([[x,y+d,z],[x+w,y+d,z],[x+w,y+d,z+h],[x,y+d,z+h]],right)+polygon([[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]],top);
+ let art = '<defs><linearGradient id="cityGlass" x2="1" y2="1"><stop stop-color="#1d607c" stop-opacity=".9"/><stop offset=".5" stop-color="#102e53"/><stop offset="1" stop-color="#07192e"/></linearGradient><linearGradient id="dome" x2="0" y2="1"><stop stop-color="#79eaf8" stop-opacity=".75"/><stop offset=".5" stop-color="#355378"/><stop offset="1" stop-color="#172e4c"/></linearGradient><linearGradient id="island" x2="0" y2="1"><stop stop-color="#1c3457"/><stop offset="1" stop-color="#091426"/></linearGradient><filter id="neon"><feGaussianBlur stdDeviation="4"/></filter><pattern id="futureGrid" width="60" height="30" patternUnits="userSpaceOnUse"><path d="M0 0l60 30M60 0L0 30" fill="none" stroke="#4582a2" stroke-opacity=".16"/></pattern></defs>';
+ art += '<path d="M65 390L500 175 935 390v24L500 631 65 414z" fill="#080e21" stroke="#264965"/><path d="M65 390L500 175 935 390 500 607z" fill="url(#island)" stroke="#526887"/><path d="M65 390L500 175 935 390 500 607z" fill="url(#futureGrid)"/>';
+ art += '<path d="M105 407L539 194M461 194L896 407M185 449L620 235M382 234L817 449" fill="none" stroke="#030c20" stroke-width="22"/>';
+ art += '<path d="M105 407L539 194M461 194L896 407" fill="none" stroke="#58dce5" stroke-width="1.5" stroke-dasharray="12 17" opacity=".8"/><path d="M185 449L620 235M382 234L817 449" fill="none" stroke="#a187fb" stroke-width="1" opacity=".65"/>';
+ // A glass trading office, with the clickable geometry following the building.
+ art += '<g class="city-destination" data-place="office" role="button" tabindex="0" aria-label="כניסה למשרד הסקאלפינג"><path d="M169 356L308 288 450 359 310 427z" fill="#101f38" stroke="#5b99bd"/><path d="M184 345L309 406 309 211 184 150z" fill="url(#cityGlass)" stroke="#5689af"/><path d="M309 406L431 345 431 150 309 211z" fill="#0e2039" stroke="#355f82"/><path d="M184 150L309 89 431 150 309 211z" fill="#203d5b" stroke="#72eef2" stroke-width="2"/><path d="M204 151L309 100 411 151 309 201z" fill="#102d4d" stroke="#647da6"/>';
+ for(let i=1;i<6;i++){
+  const y=150+i*32;
+  art+='<path d="M184 '+y+'l125 61 122-61" stroke="'+(i===3?'#8b7dfa':'#36738e')+'" stroke-width="'+(i===3?3:1)+'" fill="none"/>';
  }
- function tree(x,y){
-  const [px,py]=point(x,y);
-  return '<ellipse cx="'+px+'" cy="'+py+'" rx="21" ry="9" fill="#102c2c66"/>'+box(x-3,y-3,6,6,28,'#9a8165','#695640','#7b644d')+'<path d="M'+px+' '+(py-75)+'l-25 40q25 18 50 0z" fill="#639179"/><path d="M'+px+' '+(py-75)+'v52q12-2 25-12z" fill="#456b5c"/>';
+ for(let i=1;i<5;i++){
+  const x=184+i*25;
+  art+='<path d="M'+x+' '+(150+i*12.2)+'v191" stroke="#3d849f" opacity=".7"/>';
  }
- let art='<defs><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>';
- art+=box(-245,-200,490,400,18,'#71827a','#354d50','#3e5856',-18);
- art+=polygon([[-240,-195,1],[240,-195,1],[240,195,1],[-240,195,1]],'#718a79');
- art+=polygon([[-245,94,2],[245,94,2],[245,155,2],[-245,155,2]],'#30424b');
- art+=polygon([[150,-200,2],[211,-200,2],[211,200,2],[150,200,2]],'#30424b');
- for(let x=-230;x<240;x+=44)art+=polygon([[x,123,3],[x+20,123,3],[x+20,126,3],[x,126,3]],'#8e9990');
- for(let y=-180;y<180;y+=44)art+=polygon([[178,y,3],[181,y,3],[181,y+20,3],[178,y+20,3]],'#8e9990');
- art+=box(-135,-110,270,195,5,'#b6b7a1','#879788','#8a9586');
- for(let y=-100;y<70;y+=28)art+=polygon([[-135,y,6],[135,y,6],[135,y+1,6],[-135,y+1,6]],'#a2a993');
- for(let x=-130;x<135;x+=30)art+=polygon([[x,-110,6],[x+1,-110,6],[x+1,85,6],[x,85,6]],'#a2a993');
- for(const [x,y] of [[-190,-125],[-190,-50],[90,-155],[225,-100],[225,-40],[-190,180],[-110,180]])art+=tree(x,y);
- art+='<g class="main-building">';
- art+=box(-90,-75,180,125,8,'#cfccaf','#939c8b','#a4ac96',6);
- art+=box(-80,-65,160,110,115,'#d7d8c2','#aab7aa','#738f8a',14);
- // Two glazed facades with repeated brass mullions.
- art+=polygon([[-81,-53,34],[-81,33,34],[-81,33,112],[-81,-53,112]],'#284f59');
- art+=polygon([[-68,46,34],[68,46,34],[68,46,112],[-68,46,112]],'#244751');
- for(let y=-50;y<34;y+=18)art+=polygon([[-82,y,34],[-82,y+2,34],[-82,y+2,112],[-82,y,112]],'#a8bfa6');
- for(let x=-65;x<68;x+=22)art+=polygon([[x,47,34],[x+2,47,34],[x+2,47,112],[x,47,112]],'#adc0a4');
- for(const z of [60,88]){art+=polygon([[-81,-53,z],[-81,33,z],[-81,33,z+2],[-81,-53,z+2]],'#93aa99');art+=polygon([[-68,47,z],[68,47,z],[68,47,z+2],[-68,47,z+2]],'#93aa99');}
- for(let x=-57;x<65;x+=22)art+=polygon([[x,48,67],[x+12,48,67],[x+12,48,78],[x,48,78]],'#cce1a3');
- art+=box(-87,-72,174,124,9,'#dfdfc7','#bcc4ab','#a5b7a4',129);
- art+=box(-70,-55,140,90,5,'#5d7873','#9dae97','#9dae97',138);
- art+=box(-53,-40,55,47,23,'#ccd0bc','#98ab9c','#829e91',143);
- art+=box(20,-38,34,55,5,'#284b5a','#75938e','#648078',146);
- for(let y=-35;y<16;y+=10)art+=polygon([[23,y,152],[51,y,152],[51,y+1,152],[23,y+1,152]],'#5e8e9d');
- art+=polygon([[14,49,15],[43,49,15],[43,49,48],[14,49,48]],'#1b373f');
- art+=box(7,44,43,25,4,'#d0dbb2','#96b29c','#96b29c',49);
- for(let step=0;step<3;step++)art+=box(9,51+step*7,40,7,7-step*2,'#d7d8bd','#9baa98','#b8bfaa',6);
- const sign=point(-13,49,119);
- art+='<text x="'+sign[0]+'" y="'+sign[1]+'" fill="#233e42" font-family="Consolas" font-size="10" text-anchor="middle" transform="rotate(26.565 '+sign.join(' ')+')">SCALPING LAB</text>';
- art+='</g>';
- for(const [x,y] of [[-118,60],[118,60],[-212,77],[135,-152]]){
-  art+=box(x,y,3,3,59,'#c6d2bb','#647e78','#647e78',4);
-  const [px,py]=point(x,y,64);art+='<circle cx="'+px+'" cy="'+py+'" r="12" fill="#f6df9b" opacity=".14" filter="url(#glow)"/><circle cx="'+px+'" cy="'+py+'" r="4" fill="#ffe4a4"/>';
+ art += '<path d="M187 157L187 342 309 401 428 342 428 157M309 214v187" fill="none" stroke="#58dfe9" stroke-width="2"/><path d="M330 245l76-38v73l-76 38z" fill="#06152a" stroke="#8c89fa"/><path d="M339 291l9-14 11 2 9-24 12 3 16-31" stroke="#7dedde" fill="none" stroke-width="3"/><path d="M339 299l56-28" stroke="#426383"/><path d="M272 387v-43l37 18 30-15v44l-30 15z" fill="#58cbdf" fill-opacity=".25" stroke="#67f4e5"/>';
+ art+='<path d="M250 130l58-28 56 28-57 29z" fill="#1d385c" stroke="#b498fb"/><path d="M307 158v-30" stroke="#86e7f4"/><circle cx="307" cy="125" r="4" fill="#79ffe8"/>';
+ art+='<g transform="translate(309 450)"><rect x="-110" y="-22" width="220" height="55" rx="9" fill="#0b1930" stroke="#55d9e4"/><text y="0" fill="#e2f4ff" font-size="17" text-anchor="middle" font-family="Segoe UI">משרד הסקאלפינג</text><text y="20" fill="#75a9c1" font-size="11" text-anchor="middle" font-family="Segoe UI">6 סוכנים · כניסה למשרד ↗</text></g></g>';
+ art += '<g class="city-destination" data-place="bank" role="button" tabindex="0" aria-label="כניסה לבנק הראשי">';
+ art += bankBuilding(686,358);
+ art += '<g transform="translate(686 453)"><rect x="-103" y="-22" width="206" height="55" rx="9" fill="#11182e" stroke="#a58bfa"/><text y="0" fill="#f1eaff" font-size="17" text-anchor="middle" font-family="Segoe UI">הבנק הראשי</text><text y="20" fill="#aaa0cb" font-size="11" text-anchor="middle" font-family="Segoe UI">תקציב · סיכון · חיבורים ↗</text></g></g>';
+ for(const [x,y] of [[130,378],[467,280],[525,490],[867,378]]) {
+  art+='<path d="M'+x+' '+y+'v-55l14-7" stroke="#61849f" stroke-width="3"/><path d="M'+x+' '+(y-55)+'l14-7" stroke="#83f4f1" stroke-width="3"/><ellipse cx="'+x+'" cy="'+y+'" rx="17" ry="6" fill="#5fd5ec" opacity=".15"/>';
  }
- art+=box(-134,170,58,20,10,'#939c84','#607b6c','#6c8674',2);
- for(const [x,y,c] of [[-35,73,'#d9c59a'],[95,15,'#d6e3b2'],[-110,-10,'#a4bace']]){
-  const [px,py]=point(x,y,8);
-  art+='<ellipse cx="'+px+'" cy="'+py+'" rx="8" ry="4" fill="#183b3555"/><path d="M'+(px-4)+' '+py+'v-11q4-4 8 0v11" fill="'+c+'"/><circle cx="'+px+'" cy="'+(py-17)+'" r="4" fill="#e8bc91"/>';
- }
+ art+='<path d="M405 548l95 47 98-47" stroke="#927bfa" stroke-width="2" fill="none"/><text x="500" y="653" text-anchor="middle" fill="#536f96" font-family="Consolas" font-size="10" letter-spacing="4">FINANCIAL DISTRICT / SECTOR 01</text>';
  return art;
+}
+
+export function bankBuilding(x,y) {
+ let bank = '<g transform="translate('+x+' '+y+')">';
+ bank+='<ellipse cy="18" rx="128" ry="62" fill="#091428" stroke="#565680"/><ellipse cy="10" rx="118" ry="56" fill="#273047" stroke="#8585a3"/><ellipse cy="0" rx="108" ry="50" fill="#17253d" stroke="#abb6d1"/>';
+ bank+='<path d="M-97 0V-103H97V0a97 45 0 0 1-194 0" fill="url(#cityGlass)" stroke="#667e9e"/><ellipse cy="-103" rx="97" ry="45" fill="#1d3859"/>';
+ for(let i=0;i<9;i++){
+  const angle=Math.PI*(i/8);
+  const cx=Math.cos(angle)*94, cy=Math.sin(angle)*40;
+  bank+='<path d="M'+cx+' '+(cy-1)+'v-96" stroke="#96a9c5" stroke-width="9"/><path d="M'+(cx+2)+' '+(cy-1)+'v-96" stroke="#c4afff" stroke-width="2"/><ellipse cx="'+cx+'" cy="'+cy+'" rx="7" ry="3" fill="#b6b3d3"/>';
+ }
+ bank+='<path d="M-112-106a112 48 0 0 0 224 0v-10h-224z" fill="#424861" stroke="#c2b6e3"/><ellipse cy="-116" rx="112" ry="48" fill="#536485" stroke="#b3e4f0"/>';
+ bank+='<path d="M-94-121Q-91-208 0-210Q91-208 94-121A94 40 0 0 1-94-121" fill="url(#dome)" stroke="#96daf6"/>';
+ bank+='<path d="M0-210v127M0-210Q-75-183-59-91M0-210Q75-183 59-91" stroke="#9fc7e6" stroke-opacity=".6" fill="none"/><ellipse cy="-121" rx="94" ry="40" fill="none" stroke="#a1c8ed"/>';
+ bank+='<circle cy="-214" r="5" fill="#c9b4ff"/><path d="M-22 37V-1a22 19 0 0 1 44 0v38" fill="#071224" stroke="#bcaff2"/><path d="M0-15v53" stroke="#7d91ba"/><path d="M-37 47h74m-45 7h54" stroke="#ac9dea" stroke-width="2"/><text y="-54" text-anchor="middle" font-family="Consolas" font-size="11" fill="#e9dcff" letter-spacing="2">CITY BANK</text>';
+ return bank+'</g>';
 }
