@@ -129,6 +129,18 @@ class ClientTests(unittest.TestCase):
         kw=self.t._write.call_args.kwargs
         self.assertEqual((kw["side"],kw["qty"],kw["orderType"],kw["reduceOnly"]),("Buy","0.01","Market",True))
 
+    def test_kill_during_protection_preflight_blocks_the_final_write(self):
+        self.enable()
+        self.m.positions.side_effect=None
+        self.m.positions.return_value=[{"symbol":"ETHUSDT","side":"Buy","size":"0.02"}]
+        def mark_after_kill(symbol):
+            self.app.state.kill()
+            return D(2000)
+        self.m.mark.side_effect=mark_after_kill
+        with self.assertRaises(RiskError):
+            self.app.protect("ETHUSDT",stop_loss="1900",take_profit="2100")
+        self.t._write.assert_not_called()
+
     def test_daily_loss_and_stale_preflight_never_submit(self):
         self.enable()
         self.m.server_time_ms.side_effect=[self.now,self.now+11000]

@@ -85,6 +85,13 @@ class RiskState:
         with _transaction(self.path) as db:
             return bool(db.execute("SELECT halted FROM control WHERE id=1").fetchone()[0])
 
+    def unless_killed(self, send):
+        """Fence a non-entry mutation against the kill switch at actual dispatch."""
+        with _transaction(self._fence, write=True):
+            if self.killed():
+                raise RiskError("Emergency kill switch is active.")
+            return send()
+
     def kill(self):
         # Persist first, even if another process has started an outbound request.
         with _transaction(self.path, write=True) as db:

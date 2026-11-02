@@ -209,9 +209,11 @@ class DemoFutures:
         require_enabled()
         symbol, link = require_symbol(symbol), _order_id(order_link_id)
         self._bind_verified()
-        if self.state.killed() and (link, symbol) not in self.state.pending():
-            raise RiskError("During a kill, cancellation is limited to this client's tracked entries.")
-        return self._ack_order("cancel_order",link,category="linear",symbol=symbol)
+        def request_cancel():
+            return self._ack_order("cancel_order",link,category="linear",symbol=symbol)
+        if (link, symbol) in self.state.pending():
+            return request_cancel()
+        return self.state.unless_killed(request_cancel)
 
     def _held(self, symbol):
         rows = self.market.positions(require_symbol(symbol),one_way=True)
@@ -247,7 +249,8 @@ class DemoFutures:
         if stop_loss is None or take_profit is None:
             raise ValueError("Specify both stop loss and take profit.")
         params=self._protection(self.market.instrument(symbol),pos["side"],mark,mark,stop_loss,take_profit)
-        self._transport._write("set_trading_stop",category="linear",symbol=symbol,positionIdx=0,**params)
+        self.state.unless_killed(lambda: self._transport._write(
+            "set_trading_stop",category="linear",symbol=symbol,positionIdx=0,**params))
         return {"symbol":symbol,"status":"protection acknowledged; verify on the position"}
 
     def kill(self):
@@ -262,7 +265,7 @@ class DemoFutures:
                 try:
                     self.cancel(symbol, link)
                     result = "cancellation requested"
-                except DemoError:
+                except (DemoError, RiskError):
                     result = "unconfirmed; reconcile before retry"
                 cancellations.append({"order_link_id":link, "status":result})
         result = {"kill_latched":True, "pending_entries":len(pending), "cancellations":cancellations,
