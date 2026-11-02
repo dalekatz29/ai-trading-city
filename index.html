@@ -2,23 +2,33 @@
 <html lang="he" dir="rtl">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>עיר הסוחרים · הרובע הפיננסי</title><link rel="stylesheet" href="style.css"></head>
 <body>
-<header class="topbar">
- <a class="brand" href="#city"><svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><path d="M20 2 36 11v18l-16 9L4 29V11z" fill="#0e2739" stroke="#28eedf"/><path d="m10 24 7-8 5 4 8-10m-20 18 8-5 5 4 7-6" fill="none" stroke="#65fff0" stroke-width="2.5"/></svg><span>עיר הסוחרים<small>TRADING CITY</small></span></a>
- <nav aria-label="ניווט בעיר"><a href="#city">מפת העיר</a><a href="#office">משרד סקאלפינג</a><a href="#bank">הבנק הראשי</a></nav>
- <span class="badge">● חשבון הדמיה</span>
-</header><section id="cityView" class="city-view">
- <div class="city-title"><small dir="ltr">DISTRICT &nbsp; / &nbsp; 01</small><h1>הרובע הפיננסי</h1><p>בחרו בניין כדי להיכנס</p></div>
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="0" height="0"><symbol id="ui-city" viewBox="0 0 24 24"><path d="M3 10 8 7l5 3-5 3z M3 10v6l5 3 5-3v-6 M8 13v6 M12 5l4-2 5 3v7l-3 2 M13 6l3 2 5-2 M16 8v6"/></symbol><symbol id="ui-floor" viewBox="0 0 24 24"><path d="M3 13l9-6 9 6-9 6z M3 17l9 5 9-5 M3 9l9-6 9 6"/></symbol><symbol id="ui-bank" viewBox="0 0 24 24"><path d="M3 10h18 M4 8l8-5 8 5 M5 19h14 M3 22h18 M7 11v6 M12 11v6 M17 11v6"/></symbol><symbol id="ui-crew" viewBox="0 0 24 24"><path d="M6 11a3 3 0 1 1 6 0a3 3 0 0 1-6 0 M2 20c0-7 14-7 14 0 M15 7a3 3 0 0 1 0 6 M17 16q4 0 5 4"/></symbol><symbol id="ui-moon" viewBox="0 0 24 24"><path d="M19 15A8 8 0 0 1 9 4a8.5 8.5 0 1 0 10 11Z"/></symbol><symbol id="ui-focus" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5 M8 12h8 M12 8v8"/></symbol><symbol id="ui-select" viewBox="0 0 24 24"><path d="M5 3l13 9-6 1-3 6z"/></symbol><symbol id="ui-clock" viewBox="0 0 24 24"><path d="M12 4a8 8 0 1 1-0.1 0 M12 7v5l4 2"/></symbol><symbol id="ui-arrow" viewBox="0 0 24 24"><path d="M6 17 17 6 M7 6h10v10"/></symbol><symbol id="ui-wave" viewBox="0 0 24 24"><path d="M2 13h4l3-7 4 12 3-8 2 3h4"/></symbol><symbol id="ui-book" viewBox="0 0 24 24"><path d="M4 4h13l3 3v13H4z M8 9h7 M8 13h9 M8 16h5"/></symbol><symbol id="ui-layers" viewBox="0 0 24 24"><path d="M3 8l9-5 9 5-9 5z M3 13l9 5 9-5 M3 17l9 5 9-5"/></symbol><symbol id="ui-shield" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-5 9-8 11-3-2-8-6-8-11V5z M8 12l3 3 5-6"/></symbol><symbol id="ui-chart" viewBox="0 0 24 24"><path d="M3 4v15h18 M6 15l4-6 4 3 6-8"/></symbol><symbol id="ui-flag" viewBox="0 0 24 24"><path d="M5 21V4h13l-3 4 3 4H5"/></symbol></svg>
+<header class="topbar"><div class="topbar-inner">
+ <a class="brand" href="#city"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="#b6ffe0"/><g fill="none" stroke="#112d2b" stroke-width="2.1" stroke-linejoin="round"><path d="m7 24 7-4 6 3 13-8M7 29l7-4 6 3 13-8M10 19v-6l5-3v7m5 2V9l5-3v10"/></g></svg><span>עיר הסוחרים<small>TRADING CITY</small></span></a>
+ <nav aria-label="ניווט בעיר"><a href="#city"><svg class="ui-icon" aria-hidden="true"><use href="#ui-city"/></svg>מפת העיר</a><a href="#office"><svg class="ui-icon" aria-hidden="true"><use href="#ui-floor"/></svg>משרד הסקאלפינג</a><a href="#bank"><svg class="ui-icon" aria-hidden="true"><use href="#ui-bank"/></svg>הבנק הראשי</a></nav>
+ <span class="account-tag"><i aria-hidden="true"></i>חשבון הדמיה</span>
+</div></header><section id="cityView" class="city-view">
+ <div class="city-title"><small class="kicker"><i></i><bdi>DISTRICT 01</bdi></small><h1>הרובע הפיננסי<span class="title-period">.</span></h1><p>בחרו בניין במפה כדי להיכנס אליו.</p></div>
  <div class="map-wrap"><div class="map-grid"></div><svg id="city" viewBox="0 0 1000 680" aria-label="עיר עם משרד סקאלפינג ובנק ראשי"></svg></div>
  <div class="map-footer"><span id="mapHint">◈ מפת הרובע</span><span>2 מבנים &nbsp; / &nbsp; 6 סוכנים</span></div>
 </section>
 <main id="officeView" hidden>
- <div class="office-heading"><div><a href="#city" class="back">← חזרה לעיר</a><small>OFFICE 01 / SCALPING LAB</small><h1>משרד הסקאלפינג</h1><p>לחצו על דמות או על עמדת העבודה שלה</p></div><div class="office-state"><span id="officeActivity" class="badge">● ממתינים להפעלה</span><p id="clock"></p></div></div>
+ <div class="office-heading">
+  <div><div class="breadcrumb"><a href="#city">מפת העיר</a><span aria-hidden="true">/</span> משרד הסקאלפינג</div>
+   <p class="kicker"><i></i><bdi>SCALPING LAB</bdi></p><h1>משרד הסקאלפינג<span class="title-period">.</span></h1><p class="intro">שישה סוכנים בקומת מסחר אחת. בחרו דמות כדי לפתוח את העמדה שלה.</p></div>
+  <div class="office-state"><div class="state-caption"><svg class="ui-icon" aria-hidden="true"><use href="#ui-clock"/></svg>מצב המשמרת</div><span id="officeActivity" class="activity"></span><p id="clock"></p></div>
+ </div>
  <div class="room-layout" id="roomLayout">
-  <section class="room-panel"><div class="room-top"><span id="deskHint">קומת המסחר · בחרו עמדת סוכן</span><label class="desk-shortcut">גישה לעמדה <select id="deskPick" aria-label="בחירת עמדת סוכן"><option value="">בחירת סוכן</option></select></label></div><svg id="officeRoom" viewBox="0 0 1100 660" aria-label="פנים משרד הסקאלפינג עם שש עמדות עבודה"></svg><div class="controls"><button id="run" class="primary">▶ הפעלה</button><button id="step">15 שניות קדימה</button><button id="approve">אישור הצעה</button><button id="restartOffice" hidden>תרגול חדש</button><button id="stop" class="stop">■ עצירת חירום</button></div></section>
-
+  <section class="room-panel" aria-labelledby="floorTitle">
+   <div class="floor-header"><div><span class="eyebrow"><bdi>FLOOR 01</bdi></span><h2 id="floorTitle">קומת המסחר</h2></div><span class="instrument"><i></i><bdi>MNQ</bdi><span>הדמיה</span></span></div>
+   <div class="scene-frame"><svg id="officeRoom" viewBox="0 0 1100 660" aria-label="פנים משרד הסקאלפינג עם שש עמדות עבודה"></svg></div>
+   <div class="room-hint"><svg class="ui-icon" aria-hidden="true"><use href="#ui-select"/></svg><span id="deskHint">בחרו דמות או עמדה במשרד</span></div>
+   <div class="controls"><button id="run" class="primary">▶ הפעלה</button><button id="step">15 שניות קדימה</button><button id="approve">אישור הצעה</button><button id="restartOffice" class="primary" hidden>תרגול חדש</button><button id="stop" class="stop">■ עצירת חירום</button></div>
+  </section>
+  <aside class="crew-panel" aria-labelledby="crewTitle"><div class="crew-header"><div><span class="eyebrow"><bdi>DESK DIRECTORY</bdi></span><h2 id="crewTitle">צוות המשמרת</h2></div><span class="count-tile" aria-label="שש עמדות">06</span></div><div id="crewList" class="crew-list"></div></aside>
  </div>
  <section id="metrics" aria-label="נתוני המשרד"></section>
- <section class="bottom"><article><div class="bar"><h2>מסלול העסקאות</h2><small>EXECUTION FEED</small></div><div id="log"></div></article><article><div class="bar"><h2>מעבדת סקאלפינג</h2><small>RESEARCH</small></div><div class="panel lab"><span class="lab-icon">⌁</span><div><h3>בודקים לפני שמאמצים</h3><p>השוואת שלוש אסטרטגיות על חמישה תרחישים סינתטיים נפרדים, כולל עלויות ביצוע.</p><button id="learn">פתיחת השוואת האסטרטגיות ↖</button></div></div></article></section>
+ <section class="bottom"><article><div class="bar"><h2>מסלול העסקאות</h2><small>EXECUTION FEED</small></div><div id="log"></div></article><article><div class="bar"><h2>מעבדת סקאלפינג</h2><small>RESEARCH</small></div><div class="panel lab"><span class="lab-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-layers"/></svg></span><div><h3>בודקים לפני שמאמצים</h3><p>השוואת שלוש אסטרטגיות על חמישה תרחישים סינתטיים נפרדים, כולל עלויות ביצוע.</p><button id="learn">פתיחת השוואת האסטרטגיות ↖</button></div></div></article></section>
  <footer>סוכנים מבוססי כללים · כניסות קנייה בלבד · עמלות והחלקה מדומות · <a href="#bank">תקציב וחיבורים בבנק הראשי</a></footer>
 </main>
 <main id="bankView" hidden>
@@ -34,7 +44,7 @@
 <dialog id="agentDetails" aria-labelledby="agent" class="terminal">
  <div class="terminal-bar"><span dir="ltr">MARKET TERMINAL <i> / </i> <b id="terminalCode"></b></span><button id="closeAgent" autofocus aria-label="סגירת מסוף הסוכן">סגירה ×</button></div>
  <div class="terminal-layout"><section class="market-workspace"><div id="marketChart"></div><p class="chart-note">נתוני הקריפטו משמשים לצפייה. עסקאות הסוכנים בתרגול מבוססות על MNQ סינתטי.</p><a class="market-link" href="https://www.tradingview.com/symbols/CME_MINI-MNQ1%21/" target="_blank" rel="noopener noreferrer">גרף חוזה MNQ ב־TradingView ↗</a></section>
- <aside class="agent-report"><small>כרטיס הסוכן</small><h2 id="agent"></h2><p id="role"></p><div id="insight"></div><div id="info"></div></aside></div>
+ <aside class="agent-report"><div class="report-id"><span id="reportAvatar"></span><div><small>כרטיס סוכן</small><bdi>SCALPING LAB</bdi></div></div><h2 id="agent"></h2><p id="role"></p><div class="signal-card"><small>בדיקת הסוכן · MNQ בהדמיה</small><div id="insight"></div></div><div id="info"></div></aside></div>
 </dialog>
 <dialog id="dialog" aria-labelledby="dialogTitle"><button id="close" class="back">סגירה ×</button><div id="dialogBody"></div></dialog>
 <script type="module" src="app.mjs"></script>
