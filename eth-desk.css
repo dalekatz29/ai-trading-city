@@ -1,0 +1,59 @@
+/* Bybit demo desk: keep the terminal controls local to this view. */
+.eth-desk {
+  --ed-mint: #89f3d5;
+  --ed-amber: #f6c58a;
+  --ed-ink: #eaf2f6;
+  --ed-muted: #a9bac8;
+  --ed-stroke: #30444d;
+  --ed-panel: #12232c;
+  max-width: 1320px;
+  margin: auto;
+  color: var(--ed-ink);
+  direction: rtl;
+}
+.eth-desk [hidden] { display:none!important }
+.eth-desk .ed-head, .eth-desk .ed-row, .eth-desk .ed-section-head, .eth-desk .ed-form {
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.eth-desk .ed-head, .eth-desk .ed-section-head { justify-content:space-between }
+.eth-desk .ed-head { margin:14px 0 24px }
+.eth-desk .ed-kicker { display:block; color:var(--ed-mint); font:11px Consolas,monospace; letter-spacing:.14em }
+.eth-desk h1 { margin:8px 0; font-size:clamp(27px,4vw,44px); line-height:1.13 }
+.eth-desk h2 { font-size:18px; margin:0 }
+.eth-desk h3 { font-size:15px; margin:0 0 8px }
+.eth-desk p { color:var(--ed-muted); line-height:1.55; margin:8px 0 }
+.eth-desk .ed-head .back { display:inline-block; padding:0 0 12px }
+.eth-desk .ed-mode, .eth-desk .ed-chip { border:1px solid #486355; color:var(--ed-mint); background:#122e29; border-radius:24px; padding:5px 11px; font-size:12px; display:inline-flex; align-items:center; gap:5px }
+.eth-desk .ed-chip[data-tone=warn], .eth-desk .ed-mode { border-color:#68573f; color:var(--ed-amber); background:#332d24 }
+.eth-desk .ed-status { padding:13px 16px; border:1px solid var(--ed-stroke); border-inline-start:3px solid var(--ed-mint); background:#12252d; border-radius:9px; display:flex; align-items:center; justify-content:space-between; gap:15px; flex-wrap:wrap }
+.eth-desk .ed-status[data-tone=warn] { border-inline-start-color:var(--ed-amber) }
+.eth-desk .ed-age { font:12px Consolas,monospace; color:var(--ed-muted); direction:ltr; unicode-bidi:isolate }
+.eth-desk .ed-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:15px 0 }
+.eth-desk .ed-metric { border:1px solid var(--ed-stroke); border-radius:10px; padding:15px; background:linear-gradient(135deg,#19323a,#101d28); min-width:0 }
+.eth-desk .ed-metric small { color:var(--ed-muted); font-size:12px }
+.eth-desk .ed-metric b { display:block; font:600 clamp(16px,2.5vw,25px) Consolas,monospace; margin-top:7px; color:var(--ed-ink); direction:ltr; text-align:right; overflow-wrap:anywhere }
+.eth-desk .ed-grid { display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin:14px 0 }
+.eth-desk .ed-panel { min-width:0; padding:18px; background:var(--ed-panel); border:1px solid var(--ed-stroke); border-radius:13px }
+.eth-desk .ed-section-head { border-bottom:1px solid var(--ed-stroke); padding-bottom:12px; margin-bottom:13px }
+.eth-desk .ed-section-head small { color:#82b3af; font:10px Consolas,monospace; letter-spacing:.13em }
+.eth-desk .ed-form { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0 }
+.eth-desk label { display:grid; gap:5px; font-size:12px; color:var(--ed-muted); min-width:0 }
+.eth-desk input,.eth-desk select { box-sizing:border-box; min-width:0; width:100%; padding:9px; background:#0b1b23; color:var(--ed-ink); border:1px solid var(--ed-stroke); border-radius:6px }
+.eth-desk input { direction:ltr; text-align:right }
+.eth-desk .ed-row { gap:7px }
+.eth-desk button { min-height:38px; white-space:normal; cursor:pointer }
+.eth-desk button:disabled { cursor:not-allowed; opacity:.42 }
+.eth-desk .ed-start { background:#8ae6cd!important; border-color:#78c7b4!important; color:#0e2425!important; font-weight:650 }
+.eth-desk .ed-stop { color:#ffb3b6!important; border-color:#77454d!important; background:#39262c!important }
+.eth-desk .ed-feedback { min-height:1.5em; margin:10px 0; font-size:13px; color:var(--ed-amber) }
+.eth-desk .ed-records { overflow:auto; max-height:325px }
+.eth-desk table { width:100%; border-collapse:collapse; margin:0; font-size:12px }
+.eth-desk td,.eth-desk th { text-align:start; border-bottom:1px solid var(--ed-stroke); padding:8px 5px; vertical-align:top; white-space:nowrap }
+.eth-desk td:last-child,.eth-desk td.ed-wrap { white-space:normal; overflow-wrap:anywhere }
+.eth-desk th { font-size:11px; color:var(--ed-muted) }
+.eth-desk time,.eth-desk bdi { unicode-bidi:isolate }
+.eth-desk .ed-empty { color:var(--ed-muted); font-size:13px; padding:12px 0 }
+.eth-desk .ed-offer { border-inline-start:3px solid var(--ed-amber); padding:0 12px }
+.eth-desk .ed-note { font-size:12px; line-height:1.6 }
+@media(max-width:780px){.eth-desk .ed-grid{grid-template-columns:1fr}.eth-desk .ed-metrics{grid-template-columns:1fr 1fr}.eth-desk .ed-panel{padding:14px}}
+@media(max-width:350px){.eth-desk .ed-form{grid-template-columns:1fr}.eth-desk .ed-status{padding:10px}}
