@@ -1,0 +1,40 @@
+//@version=6
+strategy("Trading City | MNQ Momentum | 15s or 1m", overlay = true,
+     initial_capital = 100000, currency = currency.USD, pyramiding = 0,
+     default_qty_type = strategy.fixed, default_qty_value = 1,
+     commission_type = strategy.commission.cash_per_contract, commission_value = 1,
+     slippage = 1, process_orders_on_close = false, calc_on_every_tick = false)
+
+// Isolated single-contract signal test. The city's bank and partial fills are not modeled.
+// Use standard MNQ candles. One-minute mode is a separate three-minute-hold experiment.
+bool scalp = timeframe.isseconds and timeframe.multiplier == 15
+bool minuteVariant = timeframe.isminutes and timeframe.multiplier == 1
+if barstate.isfirst and (syminfo.root != "MNQ" or not chart.is_standard or not (scalp or minuteVariant))
+    runtime.error("Select standard MNQ candles at 15 seconds (office timing) or 1 minute (separate experiment).")
+
+int lookback = scalp ? 4 : 1
+float threshold = input.float(2.0, "One-minute momentum (points)", minval = 0.25, step = 0.25)
+string zone = "America/New_York"
+int secondsNY = hour(time_close, zone) * 3600 + minute(time_close, zone) * 60 + second(time_close, zone)
+// Repeat the office entry window for each weekday in New York, including DST.
+int weekdayNY = dayofweek(time_close, zone)
+bool inWindow = weekdayNY >= dayofweek.monday and weekdayNY <= dayofweek.friday and secondsNY >= 34395 and secondsNY <= 35235
+bool fullMinute = time_close - time_close[lookback] == 60000
+bool momentum = fullMinute and close - close[lookback] >= threshold
+
+if barstate.isconfirmed and strategy.position_size == 0 and inWindow and momentum
+    strategy.entry("Long", strategy.long)
+
+if barstate.isconfirmed and strategy.position_size > 0
+    float move = close - strategy.position_avg_price
+    int elapsedMs = time_close - strategy.opentrades.entry_time(0)
+    int maxHoldMs = scalp ? 45000 : 180000
+    bool timeExit = elapsedMs >= maxHoldMs
+    if move >= 4 or move <= -3 or timeExit
+        // Check closes, submit a market exit and let TradingView fill on the next available tick.
+        strategy.close("Long", comment = move >= 4 ? "Target" : move <= -3 ? "Stop" : "Time")
+
+var table badge = table.new(position.top_right, 1, 1)
+if barstate.islast
+    table.cell(badge, 0, 0, scalp ? "MNQ 15s | 45s hold" : "MNQ 1m variant | 3m hold",
+         text_color = color.white, bgcolor = color.rgb(31, 67, 75))
