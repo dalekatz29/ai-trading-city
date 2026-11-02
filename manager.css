@@ -1,0 +1,90 @@
+.manager-entry {
+  display:inline-flex;align-items:center;margin-inline-start:.45rem;padding:2px 8px;border:1px solid #36554f;
+  border-radius:6px;color:#b3f6d8;font-size:.86em;font-weight:650;text-decoration:none;white-space:nowrap
+}
+.manager-entry:hover {background:#1e3733;text-decoration:none}
+#managerView {
+  width:min(1220px,100%);margin:auto;padding-block:28px 56px;color:#e7f0f1;
+  --mg-line:#2d4047;--mg-muted:#a7bdc2;--mg-green:#a9f3d1;--mg-dark:#101b22
+}
+.mg-heading {display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:18px}
+.mg-heading .kicker {margin:0;color:#8ee8bd}
+.mg-heading h1 {margin:5px 0 7px;font-size:clamp(32px,4.1vw,58px);letter-spacing:-1.5px;line-height:1.05}
+.mg-heading p:not(.kicker) {margin:0;color:var(--mg-muted);font-size:15px;max-width:62ch}
+.mg-market {border-inline-start:2px solid #4d8471;padding-inline-start:14px;display:grid;gap:4px;flex:none}
+.mg-market bdi,.mg-card-head small,.mg-signal-title small {font-family:var(--mono,monospace);letter-spacing:.08em}
+.mg-market span,.mg-toolbar small {font-size:12px;color:var(--mg-muted)}
+.mg-toolbar {position:sticky;top:3px;z-index:3;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:8px 11px 8px 9px;background:#17242bf7;border:1px solid #364b52;border-radius:10px;margin:0 0 15px}
+.mg-status {display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.mg-status::before,.mg-speaker::before {content:"";width:8px;height:8px;display:inline-block;background:#f4c378;border-radius:50%;flex:none}
+.mg-status[data-tone=on]::before,.mg-speaker::before {background:#91efbf}
+.mg-toolbar .mg-stop {margin-inline-start:auto;color:#ffb4b9;background:#38252d;border:1px solid #74454e;font-weight:700;min-height:42px}
+.mg-layout {display:grid;grid-template-columns:minmax(0,1.27fr) minmax(0,1fr);gap:14px;align-items:start}
+.mg-card {min-width:0;border:1px solid var(--mg-line);border-radius:16px;padding:clamp(15px,2.4vw,26px);background:#132028}
+.mg-talk {background:radial-gradient(ellipse at 95% 0%,#203f36 0,transparent 62%),#122127;border-color:#396452}
+.mg-card-head {display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.mg-card-head small {color:#9cbbbf;font-size:10px;direction:ltr;display:inline-block}
+.mg-talk .mg-card-head small {color:#94dfba}
+.mg-card-head h2 {margin:3px 0 0;color:#eff7f4;font-size:clamp(18px,2.3vw,25px);letter-spacing:-.45px}
+.mg-card-head svg {color:#93c3b8}
+.mg-card-head .mg-insignia {box-sizing:content-box;border:1px solid #416958;border-radius:11px;padding:8px;background:#234437;color:var(--mg-green)}
+.mg-chat {height:clamp(150px,19vh,190px);overflow:auto;overscroll-behavior:contain;border-block:1px solid #334d46;scrollbar-color:#557c70 transparent;padding:5px 0;margin-bottom:14px}
+.mg-turn {margin:8px 0 12px;max-width:94%}
+.mg-turn p {margin:4px 0 0;line-height:1.55;color:#dfebea;font-size:14px;white-space:pre-line;overflow-wrap:anywhere}
+.mg-speaker {display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mg-green);font-weight:750}
+.mg-speaker::before {width:6px;height:6px}
+.mg-user {border-inline-start:2px solid #647e88;padding-inline-start:10px}
+.mg-user .mg-speaker {color:#acc6e4}
+.mg-user .mg-speaker::before {display:none}
+.mg-error p {color:#ffd2a1}
+.mg-form {display:block}
+.mg-form label {display:block;color:#d9e9e7;font-size:13px;font-weight:700;margin-bottom:6px}
+.mg-input-row {display:flex;gap:7px}
+.mg-input-row input {width:100%;min-width:0;background:#0e1a20;border:1px solid #476359;color:#e8f4f1;min-height:44px;padding:7px 11px}
+.mg-input-row input::placeholder {color:#9bb0b3;font-size:13px}
+.mg-input-row .mg-send {background:#bcf1cd;color:#163024;border-color:#bce9ba;font-weight:750;white-space:nowrap;min-height:44px}
+.mg-suggest {display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.mg-suggest button {padding:3px 9px;color:#cfdfdd;border:1px solid #405950;border-radius:30px;background:#1b2c2a;font-size:12px}
+.mg-metrics {display:grid;grid-template-columns:1fr 1fr;gap:1px;border:1px solid #30444b;border-radius:10px;overflow:hidden;background:#30444b;margin-bottom:10px}
+.mg-metrics>div {padding:9px 12px;background:#101b23;min-width:0}
+.mg-metrics span {display:block;color:#b3c6c9;font-size:12px}
+.mg-metrics bdi {display:inline-block;font:600 clamp(18px,2vw,27px)/1.4 var(--mono,monospace);letter-spacing:-.03em}
+.mg-metrics small {font:10px var(--mono,monospace);color:#98b2b4;margin-inline-start:6px}
+#managerView [data-sign="1"] {color:#a0efc5}
+#managerView [data-sign="-1"] {color:#ffacb5}
+#managerView .mg-note {color:var(--mg-muted);font-size:13px;line-height:1.55;margin:7px 0}
+.mg-details {display:inline-flex;margin-top:7px;color:#9ee1ca;font-size:13px;font-weight:650}
+.mg-table-wrap {overflow:auto;max-width:100%}
+.mg-table-wrap table {width:100%;border-collapse:collapse;font-size:13px}
+.mg-table-wrap caption {text-align:start;margin:4px 0 8px;color:#adc2c4;font-size:12px}
+.mg-table-wrap th,.mg-table-wrap td {text-align:start;padding:7px 3px;border-bottom:1px solid #304149}
+.mg-table-wrap thead {color:#b0c5c8;font-size:12px}
+.mg-table-wrap tbody th {font-weight:500}
+.mg-table-wrap td[dir=ltr] {text-align:right;font-family:var(--mono,monospace)}
+.mg-signal {border-top:1px solid #304149;padding:9px 0}
+.mg-signal p {line-height:1.5;margin:4px 0 0;font-size:12px;color:#b4c6cb}
+.mg-signal-title {display:flex;align-items:center;gap:8px;font-size:13px}
+.mg-signal-title small {color:#94aea8}
+.mg-signal-badge {margin-inline-start:auto;color:#ddd4ad;font-size:11px}
+.mg-signal-badge[data-tone=on] {color:#a0efc5}
+#managerView :focus-visible,.manager-entry:focus-visible {outline:2px solid #aff0cb;outline-offset:2px}
+@media (max-width:1020px) {.topbar-inner{gap:15px}.topbar nav a{padding-inline:9px}}
+@media (max-width:800px) {
+  .mg-layout {grid-template-columns:1fr}
+  .mg-card-head {margin-bottom:11px}
+  .mg-chat {height:150px}
+}
+@media (max-width:740px) {
+  .topbar nav {overflow-x:auto;justify-content:flex-start}
+  .topbar nav a {flex:none}
+  #managerView {padding-block:20px 35px}
+  .mg-heading {align-items:start}
+  .mg-heading .breadcrumb {margin-bottom:10px}
+  .mg-market {display:none}
+  .mg-toolbar {gap:5px 10px}
+  .mg-toolbar small {flex-basis:100%;order:3}
+  .mg-status {font-size:12px}
+  .mg-input-row {gap:5px}
+  .mg-heading p:not(.kicker) {font-size:14px}
+}
+

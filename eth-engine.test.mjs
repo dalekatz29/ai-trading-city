@@ -74,6 +74,26 @@ async function deskFixture() {
     advance:(ms,nextPrice=price)=>{clock+=ms;price=nextPrice;}};
 }
 
+test('one manager command verifies demo, auto-submits within limits and repeated starts do not duplicate', async()=>{
+  const d=await deskFixture();
+  const cmd={action:'manager-start',budget:1000,maxPosition:25,dailyLoss:10};
+  const [state]=await Promise.all([d.engine.act(cmd),d.engine.act(cmd)]);
+  assert.equal(state.running,true);
+  assert.equal(state.config.mode,'auto');
+  assert.equal(d.submissions.length,1);
+  assert.ok(Number(d.submissions[0].limitPrice)*Number(d.submissions[0].quantity)<=25);
+});
+
+test('emergency stop supersedes manager startup, even while it is still connecting', async()=>{
+  const d=await deskFixture();
+  const boot=d.engine.act({action:'manager-start',budget:1000,maxPosition:25,dailyLoss:10});
+  const halt=d.engine.act({action:'stop'});
+  await assert.rejects(boot);
+  await halt;
+  assert.equal(d.engine.view().running,false);
+  assert.equal(d.submissions.length,0);
+});
+
 async function start(engine,mode='manual',limits={}) {
   await engine.act({action:'connect'});
   await engine.act({action:'start',...config,mode,...limits});

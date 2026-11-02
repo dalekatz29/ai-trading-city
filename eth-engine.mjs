@@ -109,7 +109,8 @@ export async function createEthEngine({
       market:market && {...market.quote, lastClosedAt:market.lastClosedAt}, signals,
       position:position(), proposal:proposal && proposal.expiresAt > now() ? proposal : null,
       orders:db.orders.slice(-100).reverse().map(({fills, ...rest})=>rest),
-      fills:db.orders.flatMap(order=>order.fills).slice(-120).reverse(), journal:db.journal.slice(-80).reverse()};
+      fills:db.orders.flatMap(order=>order.fills).slice(-120).reverse(), journal:db.journal.slice(-80).reverse(),
+      totals:{orders:db.orders.length, fills:db.orders.reduce((sum,order)=>sum+order.fills.length,0)}};
   }
   function enqueue(task) {
     const result = queue.then(task);
@@ -318,6 +319,14 @@ export async function createEthEngine({
     const epoch=stopEpoch;
     return enqueue(async()=>{
       if (cmd.action === 'connect') await connect();
+      else if (cmd.action === 'manager-start') {
+        if (!running) {
+          if (!connected || locked) await connect();
+          check(epoch === stopEpoch,'ההפעלה בוטלה בעצירת החירום.');
+          await start({...cmd,mode:'auto'}, epoch);
+          if (running) await scan(epoch);
+        }
+      }
       else if (cmd.action === 'stop') await stop();
       else if (cmd.action === 'start') await start(cmd,epoch);
       else if (cmd.action === 'approve') { check(typeof cmd.proposalId==='string' && cmd.proposalId.length>0,'חסר מזהה הצעה.'); await scan(epoch,cmd.proposalId); }

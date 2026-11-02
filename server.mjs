@@ -1,9 +1,10 @@
 import http from 'node:http';
 import {createEthEngine} from './eth-engine.mjs';
+import {createManager} from './manager.mjs';
 import {getMarketData} from './market.mjs';
 import https from 'node:https';
 import {readFile} from 'node:fs/promises';
-const assets=new Map([['/','index.html'],...['style.css','app.mjs','engine.mjs','city.mjs','office.mjs','chart.mjs','eth-desk.mjs','eth-desk.css'].map(p=>['/'+p,p])]);
+const assets=new Map([['/','index.html'],...['style.css','app.mjs','engine.mjs','city.mjs','office.mjs','chart.mjs','eth-desk.mjs','eth-desk.css','manager-ui.mjs','manager.css'].map(p=>['/'+p,p])]);
 function gateway(){
  return new Promise(resolve=>{
  const req=https.get('https://localhost:5000/v1/api/iserver/auth/status',{timeout:2500},res=>{
@@ -12,6 +13,7 @@ function gateway(){
  });
 }
 const ethDesk = await createEthEngine();
+const manager = await createManager({desk:ethDesk});
 const ethTimer = setInterval(() => ethDesk.tick().catch(() => {}), 10000);
 ethTimer.unref();
 
@@ -37,17 +39,26 @@ http.createServer(async(req,res)=>{
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
  res.setHeader('X-Frame-Options','DENY');
  const url=new URL(req.url,'http://127.0.0.1:4173');
+ if(url.pathname==='/api/manager' && req.method==='GET') return json(res,200,manager.report());
  if (url.pathname === '/api/eth-demo' && req.method === 'GET') {
   return json(res,200,ethDesk.view());
  }
- if (url.pathname === '/api/eth-demo/action' && req.method === 'POST') {
+ if (['/api/eth-demo/action','/api/manager'].includes(url.pathname) && req.method === 'POST') {
   if (req.headers.origin !== 'http://'+req.headers.host ||
      req.headers['content-type']?.split(';')[0].trim() !== 'application/json' ||
      (req.headers['sec-fetch-site'] && req.headers['sec-fetch-site'] !== 'same-origin'))
    return json(res,403,{error:'אפשר להפעיל את הדסק רק מתוך העיר המקומית.'});
   let cmd;
   try {cmd=await readCommand(req);} catch {return json(res,400,{error:'בקשת דמו לא תקינה.'});}
-  try {return json(res,200,await ethDesk.act(cmd));} catch (err) {return json(res,409,{error:err.message});}
+  try {
+   if(url.pathname==='/api/manager') {
+    if(cmd.action!=='command' || typeof cmd.text!=='string' || !cmd.text.trim() || cmd.text.length>450)
+     return json(res,400,{error:'יש לשלוח פקודת טקסט קצרה למנהל.'});
+    return json(res,200,await manager.command(cmd.text));
+   }
+   if(cmd.action==='manager-start') return json(res,400,{error:'הפעלת המנהל זמינה דרך מסך המנהל.'});
+   return json(res,200,await ethDesk.act(cmd));
+  } catch (err) {return json(res,409,{error:err.message});}
  }
  if(req.method!=='GET'){res.writeHead(405).end();return;}
  if(url.pathname==='/api/market/klines'||url.pathname==='/api/market/recording'){

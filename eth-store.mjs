@@ -41,10 +41,21 @@ export async function readLedger() {
 }
 
 export async function writeLedger(data) {
+  return writeLocal(ledgerPath,data);
+}
+
+const researchPath = join(dir, 'manager-research-v1.json');
+export async function readResearch() {
+  try { return JSON.parse(await fs.readFile(researchPath,'utf8')); }
+  catch (err) { if(err.code==='ENOENT') return null; throw err; }
+}
+export const writeResearch = report => writeLocal(researchPath,report);
+
+async function writeLocal(destination,data) {
   await fs.mkdir(dir, {recursive:true, mode:0o700});
   const temp = join(dir, 'ledger-' + randomUUID() + '.tmp');
   try {
     await fs.writeFile(temp, JSON.stringify(data), {encoding:'utf8',mode:0o600,flag:'wx',flush:true});
-    await fs.rename(temp, ledgerPath);
+    await fs.rename(temp, destination);
   } finally { await fs.unlink(temp).catch(()=>{}); }
 }

@@ -1,4 +1,5 @@
 import {mountEthDesk} from './eth-desk.mjs';
+import {mountManager} from './manager-ui.mjs';
 import {cityScene,bankBuilding} from './city.mjs';
 import {officeScene} from './office.mjs';
 import {names,create,next,bar,signals,openPNL,halt,review} from './engine.mjs';
@@ -123,21 +124,25 @@ function map(){
  $('bankSummary').innerHTML='<span>חשיפה נומינלית פתוחה</span><strong>'+fmt(s.qty*bar(s.i,s.day).price*2)+'</strong><span>מתוך תקרה של '+fmt(s.budget)+'</span><p>'+s.qty+' חוזים פתוחים · רווח ממומש '+fmt(s.cash)+'</p>';
 }
 const ethDesk = mountEthDesk($('ethDesk'));
+const manager = mountManager($('managerView'));
 function route(){
  const inside=location.hash==='#office';
  const bank=location.hash==='#bank';
  const eth=location.hash==='#eth';
- $('cityView').hidden=inside||bank||eth;
+ const managing=location.hash==='#manager';
+ $('cityView').hidden=inside||bank||eth||managing;
  $('ethDesk').hidden=!eth;
  ethDesk.setVisible(eth);
- document.querySelector('.account-tag').innerHTML='<i aria-hidden="true"></i>'+(eth?'Bybit Demo · כסף מדומה':'חשבון הדמיה');
+ $('managerView').hidden=!managing;
+ manager.setVisible(managing);
+ document.querySelector('.account-tag').innerHTML='<i aria-hidden="true"></i>'+(eth||managing?'Bybit Demo · כסף מדומה':'חשבון הדמיה');
  $('officeView').hidden=!inside;
  $('bankView').hidden=!bank;
  if(!inside){
   pause();
   if($('agentDetails').open)$('agentDetails').close();
  }
- const place=inside?'office':bank?'bank':eth?'eth':'city';
+ const place=inside?'office':bank?'bank':eth?'eth':managing?'manager':'city';
  document.querySelectorAll('header nav a').forEach(link=>{
   if(link.hash==='#'+place)link.setAttribute('aria-current','page');
   else link.removeAttribute('aria-current');
